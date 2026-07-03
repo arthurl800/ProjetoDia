@@ -7,6 +7,7 @@ const contextBox = document.getElementById('contextBox');
 const contextTitle = document.getElementById('contextTitle');
 const contextPreview = document.getElementById('contextPreview');
 const clearContextBtn = document.getElementById('clearContext');
+const clearChatBtn = document.getElementById('clearChat');
 
 const pdfInput = document.getElementById('pdfInput');
 const audioInput = document.getElementById('audioInput');
@@ -17,7 +18,7 @@ const CHAT_API_URL = 'http://127.0.0.1:11434/api/chat';
 const TRANSCRIBE_API_URL = 'http://127.0.0.1:8001/transcribe';
 const OLLAMA_TRANSCRIBE_URL = 'http://127.0.0.1:11434/api/transcribe';
 const MODEL_NAME = 'phi3';
-const SYSTEM_PROMPT = 'Você é um assistente de chat útil e conciso para responder perguntas em português.';
+const SYSTEM_PROMPT = 'Você é um assistente de chat útil, conciso e factualmente correto em português. Use apenas o contexto adicional fornecido quando ele estiver presente. Se a resposta não puder ser obtida a partir do contexto, diga que não há informação suficiente no arquivo anexado. Quando for uma pergunta de cultura geral ou esportes, responda com fatos conhecidos e verificados e evite inventar informações. Se você não souber a resposta exata, diga que não tem certeza em vez de dar um palpite.';
 
 // Configurar PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -70,6 +71,14 @@ function resetContext() {
 }
 
 clearContextBtn.addEventListener('click', resetContext);
+clearChatBtn.addEventListener('click', resetChat);
+
+function resetChat() {
+  state.history = [];
+  chatHistory.innerHTML = '';
+  setStatus('Conversa limpa. Pergunte algo novo.');
+  userInput.focus();
+}
 
 // ==================== PDF EXTRACTION ====================
 async function extractPdfText(file) {
@@ -244,7 +253,7 @@ async function sendMessage(question) {
   // Montar prompt com contexto
   let contextualPrompt = question;
   if (state.context.text) {
-    contextualPrompt = `Contexto adicional:\n${state.context.text}\n\nPergunta: ${question}`;
+    contextualPrompt = `Contexto adicional (use somente este texto para responder):\n${state.context.text}\n\nPergunta: ${question}`;
   }
 
   const messages = [

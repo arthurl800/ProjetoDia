@@ -103,7 +103,7 @@ python -m uvicorn transcribe_server:app --host 127.0.0.1 --port 8001
 ```bash
 ollama serve
 ```
-# a interface web precisa ser servido por um servidor local separado, por isso http://localhost:8000 só funciona após iniciar python -m http.server 8000 ou Live Server.
+# a interface web precisa ser servido por um servidor local separado, por isso http://localhost:8000 só funciona após iniciar <python -m http.server 8000> ou Live Server.
 
 # O servidor Ollama estará em `127.0.0.1:11434` e o backend de transcrição em `127.0.0.1:8001`
 
