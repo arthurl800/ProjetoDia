@@ -1,4 +1,4 @@
-# 🤖 Projeto Final: Chat Inteligente Local com Ollama
+# 🤖 Projeto Final: Chat Inteligente Local com Ollama :)
 
 Um chatbot completo rodando **100% offline** no seu PC com suporte a PDF, Áudio e Vídeo.
 
