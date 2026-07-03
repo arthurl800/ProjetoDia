@@ -1,0 +1,369 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+  accent-color: #50c878;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: radial-gradient(circle at top, rgba(124, 193, 255, 0.16), transparent 35%),
+    linear-gradient(180deg, #0f1720 0%, #090b10 100%);
+}
+
+.app-shell {
+  width: min(980px, 100%);
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  background: rgba(7, 14, 24, 0.92);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+  max-height: 95vh;
+  overflow-y: auto;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2vw, 2.2rem);
+}
+
+.topbar p {
+  margin: 0.35rem 0 0;
+  color: #98a8c6;
+}
+
+.status {
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #b8d8ff;
+  white-space: nowrap;
+}
+
+/* FILE MANAGER SECTION */
+.file-manager {
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0.84), rgba(10, 12, 18, 0.95));
+}
+
+.file-manager-header h3 {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.1rem;
+}
+
+.file-manager-header p {
+  margin: 0;
+  color: #98a8c6;
+  font-size: 0.9rem;
+}
+
+.file-uploads {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.upload-box {
+  position: relative;
+}
+
+.upload-box label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 2px dashed rgba(124, 193, 255, 0.3);
+  border-radius: 12px;
+  background: rgba(124, 193, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.upload-box label:hover {
+  border-color: rgba(124, 193, 255, 0.6);
+  background: rgba(124, 193, 255, 0.1);
+}
+
+.upload-box label span {
+  display: flex;
+  align-items: center;
+  justified-content: center;
+  font-size: 1.5rem;
+}
+
+.upload-progress {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.progress-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #7fc1ff, #1f6feb);
+  border-radius: 2px;
+  margin-bottom: 0.35rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.context-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(124, 193, 255, 0.08);
+  border: 1px solid rgba(124, 193, 255, 0.2);
+  border-radius: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.context-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.context-header h4 {
+  margin: 0;
+  color: #58a6ff;
+}
+
+.btn-clear {
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 100, 100, 0.2);
+  border: 1px solid rgba(255, 100, 100, 0.4);
+  color: #ff6464;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.btn-clear:hover {
+  background: rgba(255, 100, 100, 0.3);
+  border-color: rgba(255, 100, 100, 0.6);
+}
+
+.context-preview {
+  font-size: 0.85rem;
+  color: #c9d1d9;
+  line-height: 1.5;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+/* CHAT WINDOW */
+.chat-window {
+  min-height: 300px;
+  max-height: 420px;
+  display: grid;
+  gap: 1rem;
+  overflow-y: auto;
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0.84), rgba(10, 12, 18, 0.95));
+}
+
+.message {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 18px;
+  line-height: 1.65;
+}
+
+.message.user {
+  background: rgba(124, 193, 255, 0.12);
+  border: 1px solid rgba(124, 193, 255, 0.2);
+  justify-self: end;
+  max-width: 85%;
+}
+
+.message.assistant {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.message strong {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.message p {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* COMPOSER */
+.composer {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.composer label {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.composer textarea {
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(13, 17, 23, 0.5);
+  color: #e6edf3;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.composer textarea:focus {
+  outline: none;
+  border-color: rgba(124, 193, 255, 0.4);
+  background: rgba(13, 17, 23, 0.8);
+}
+
+.composer-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.composer-actions button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #7fc1ff, #1f6feb);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.composer-actions button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(127, 193, 255, 0.3);
+}
+
+.composer-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .app-shell {
+    padding: 1rem;
+  }
+
+  .topbar {
+    flex-direction: column;
+  }
+
+  .file-uploads {
+    grid-template-columns: 1fr;
+  }
+
+  .message.user {
+    max-width: 100%;
+  }
+
+  .chat-window {
+    max-height: 300px;
+  }
+}
+
+.composer {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.composer label {
+  font-size: 0.95rem;
+  color: #a8b8d6;
+}
+
+textarea {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8fafc;
+  padding: 1rem;
+  resize: vertical;
+  min-height: 120px;
+  font: 1rem Inter, sans-serif;
+}
+
+button {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 0.95rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0b1220;
+  background: linear-gradient(135deg, #7fc1ff, #50a7ff);
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 30px rgba(79, 156, 255, 0.24);
+}
+
+@media (min-width: 640px) {
+  .composer-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-shell {
+    padding: 1rem;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Ollama Phi-3 com Contexto</title>
+  <link rel="stylesheet" href="ollama-chat.css" />
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- FFmpeg.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.6/dist/ffmpeg.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <h1>Chat local Ollama</h1>
+        <p>Phi-3 em execução no seu PC. Suporte a PDF, Áudio e Vídeo.</p>
+      </div>
+      <div class="status" id="status">Aguardando pergunta...</div>
+    </header>
+
+    <!-- Seção de Upload de Arquivos -->
+    <section class="file-manager">
+      <div class="file-manager-header">
+        <h3>📁 Contexto do Chat</h3>
+        <p>Carregue um PDF, áudio ou vídeo para usar como contexto</p>
+      </div>
+
+      <div class="file-uploads">
+        <!-- Upload PDF -->
+        <div class="upload-box">
+          <label for="pdfInput">
+            <span>📄 PDF</span>
+            <input type="file" id="pdfInput" accept=".pdf" hidden />
+          </label>
+          <div class="upload-progress" id="pdfProgress" style="display: none;">
+            <div class="progress-bar"></div>
+            <span id="pdfStatus"></span>
+          </div>
+        </div>
+
+        <!-- Upload Áudio -->
+        <div class="upload-box">
+          <label for="audioInput">
+            <span>🎧 Áudio</span>
+            <input type="file" id="audioInput" accept=".mp3,.mp4,.wav,.m4a" hidden />
+          </label>
+          <div class="upload-progress" id="audioProgress" style="display: none;">
+            <div class="progress-bar"></div>
+            <span id="audioStatus"></span>
+          </div>
+        </div>
+
+        <!-- Upload Vídeo -->
+        <div class="upload-box">
+          <label for="videoInput">
+            <span>🎬 Vídeo</span>
+            <input type="file" id="videoInput" accept=".mp4,.webm,.avi" hidden />
+          </label>
+          <div class="upload-progress" id="videoProgress" style="display: none;">
+            <div class="progress-bar"></div>
+            <span id="videoStatus"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contexto Carregado -->
+      <div id="contextBox" class="context-box" style="display: none;">
+        <div class="context-header">
+          <h4 id="contextTitle">Contexto carregado</h4>
+          <button type="button" id="clearContext" class="btn-clear">✕ Limpar</button>
+        </div>
+        <div id="contextPreview" class="context-preview"></div>
+      </div>
+    </section>
+
+    <!-- Chat -->
+    <main class="chat-window" id="chatHistory" aria-live="polite"></main>
+
+    <form id="chatForm" class="composer">
+      <label for="userInput">Sua pergunta</label>
+      <textarea id="userInput" rows="4" placeholder="Digite sua pergunta aqui..." required></textarea>
+      <div class="composer-actions">
+        <button type="submit">Enviar</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="ollama-chat.js"></script>
+</body>
+</html>
