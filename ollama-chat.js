@@ -51,6 +51,35 @@ function appendMessage(role, content) {
   chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
+function appendMediaMessage(role, media) {
+  const container = document.createElement('article');
+  container.className = `message ${role}`;
+
+  const label = document.createElement('strong');
+  label.textContent = role === 'user' ? 'Você' : 'Phi-3';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'media-message';
+
+  if (media.type === 'video') {
+    const video = document.createElement('video');
+    video.src = media.src;
+    video.controls = true;
+    video.preload = 'metadata';
+    video.className = 'attached-media';
+
+    const filename = document.createElement('div');
+    filename.className = 'media-filename';
+    filename.textContent = media.name;
+
+    wrapper.append(video, filename);
+  }
+
+  container.append(label, wrapper);
+  chatHistory.appendChild(container);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
 function showContextBox(type, text, title) {
   state.context.type = type;
   state.context.text = text;
@@ -190,59 +219,38 @@ audioInput.addEventListener('change', async (event) => {
 
 // ==================== VIDEO EXTRACTION & TRANSCRIPTION ====================
 async function extractAudioFromVideo(videoFile) {
-  const FFmpeg = FFmpegWasm.FFmpeg;
-  const fetchFile = FFmpegWasm.fetchFile;
-
-  const ffmpeg = new FFmpeg();
-  const { log } = FFmpeg;
-
-  if (!ffmpeg.isLoaded()) {
-    setStatus('Carregando FFmpeg... aguarde');
-    await ffmpeg.load();
-  }
-
-  // Ler arquivo de vídeo
-  const data = await fetchFile(videoFile);
-  ffmpeg.FS('writeFile', videoFile.name, data);
-
-  // Extrair áudio como WAV
-  const outputName = 'audio_extracted.wav';
-  await ffmpeg.run('-i', videoFile.name, '-q:a', '9', '-filter:a', 'aformat=sample_rates=16000', outputName);
-
-  // Ler arquivo WAV convertido
-  const audioData = ffmpeg.FS('readFile', outputName);
-  ffmpeg.FS('unlink', videoFile.name);
-  ffmpeg.FS('unlink', outputName);
-
-  return new Blob([audioData.buffer], { type: 'audio/wav' });
+  throw new Error('Transcrição automática de vídeo não está disponível neste navegador.');
 }
 
 videoInput.addEventListener('change', async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
+  const objectUrl = URL.createObjectURL(file);
+  appendMediaMessage('user', { type: 'video', src: objectUrl, name: file.name });
+
   const progressBox = document.getElementById('videoProgress');
   const statusSpan = document.getElementById('videoStatus');
   progressBox.style.display = 'block';
-  statusSpan.textContent = 'Extraindo áudio do vídeo...';
+  statusSpan.textContent = 'Anexando vídeo ao chat...';
 
   try {
-    const audioBlob = await extractAudioFromVideo(file);
-    statusSpan.textContent = 'Transcrevendo...';
-
-    const text = await transcribeAudio(audioBlob);
+    await extractAudioFromVideo(file);
+    const text = `Vídeo anexado: ${file.name}`;
     showContextBox('video', text, '🎬 Vídeo');
-    statusSpan.textContent = '✓ Vídeo processado!';
+    statusSpan.textContent = '✓ Vídeo anexado com sucesso!';
     setStatus('Vídeo carregado. Faça perguntas sobre o conteúdo.');
   } catch (error) {
-    console.error('Erro ao processar vídeo:', error);
-    statusSpan.textContent = '✗ Erro ao processar vídeo';
-    statusSpan.style.color = '#ff6464';
+    console.warn('Vídeo anexado sem transcrição:', error);
+    showContextBox('video', `Vídeo anexado: ${file.name}. A transcrição automática não foi concluída.`, '🎬 Vídeo');
+    statusSpan.textContent = '⚠ Vídeo anexado sem transcrição';
+    statusSpan.style.color = '#ffcf70';
+    setStatus('Vídeo incluído no chat.');
   }
 
   setTimeout(() => {
     progressBox.style.display = 'none';
-  }, 2000);
+  }, 2200);
 });
 
 // ==================== CHAT WITH CONTEXT ====================
@@ -250,17 +258,22 @@ async function sendMessage(question) {
   state.loading = true;
   setStatus('Enviando para Ollama...');
 
-  // Montar prompt com contexto
-  let contextualPrompt = question;
-  if (state.context.text) {
-    contextualPrompt = `Contexto adicional (use somente este texto para responder):\n${state.context.text}\n\nPergunta: ${question}`;
+  const messages = [{ role: 'system', content: SYSTEM_PROMPT }];
+
+  if (state.history.length) {
+    messages.push(...state.history);
   }
 
-  const messages = [
-    { role: 'system', content: SYSTEM_PROMPT },
-    ...state.history,
-    { role: 'user', content: contextualPrompt },
-  ];
+  if (state.context.text) {
+    const contextTypeLabel = state.context.type === 'pdf' ? 'PDF' : state.context.type === 'audio' ? 'áudio' : state.context.type === 'video' ? 'vídeo' : 'arquivo';
+    const trimmedContext = state.context.text.slice(0, 12000);
+    messages.push({
+      role: 'user',
+      content: `Você recebeu um ${contextTypeLabel} anexado pelo usuário. Use este conteúdo como fonte principal para responder. Não diga que o arquivo não existe. Se a pergunta puder ser respondida a partir deste conteúdo, responda com base nele. Se o conteúdo não for suficiente, diga que não há informação suficiente no conteúdo fornecido.\n\nConteúdo do ${contextTypeLabel}:\n${trimmedContext}`,
+    });
+  }
+
+  messages.push({ role: 'user', content: question });
 
   try {
     const response = await fetch(CHAT_API_URL, {

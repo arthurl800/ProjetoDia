@@ -48,8 +48,8 @@ const SYSTEM_PROMPT = 'Você é um assistente de chat útil...';
 
 // Customizar:
 const SYSTEM_PROMPT = 'Você é um especialista em Python...';
-const SYSTEM_PROMPT = 'Role de especialista em negócios...';
-const SYSTEM_PROMPT = 'Você é um profesor amigável...';
+const SYSTEM_PROMPT = 'Especialista em negócios...';
+const SYSTEM_PROMPT = 'Você é um professor amigável...';
 ```
 
 ### 4. Mudar Porta do Ollama
